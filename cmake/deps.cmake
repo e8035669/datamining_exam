@@ -10,19 +10,19 @@ endif()
 include_directories(${DEPS_PATHS})
 
 # Find other dependences
-set(OpenCV_STATIC OFF CACHE BOOL "Using OpenCV static linking library")
+#set(OpenCV_STATIC OFF CACHE BOOL "Using OpenCV static linking library")
 #find_package(OpenCV REQUIRED)
-find_package(OpenCV)
-include_directories(${OpenCV_INCLUDE_DIRS})
+#find_package(OpenCV)
+#include_directories(${OpenCV_INCLUDE_DIRS})
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 #find_package(Serialport REQUIRED)
-find_package(Serialport)
-include_directories(${SERIALPORT_INCLUDE_DIRS})
+#find_package(Serialport)
+#include_directories(${SERIALPORT_INCLUDE_DIRS})
 
 #find_package(Fuzzylite REQUIRED)
-find_package(Fuzzylite)
+#find_package(Fuzzylite)
 
 # Add subdirectory
 foreach(DEPS_PATH ${DEPS_PATHS})

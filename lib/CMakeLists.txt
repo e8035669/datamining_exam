@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 2.8)
 
 # Set variables
-set(PROJECT_NAME demo)
+set(PROJECT_NAME misc)
 set(PROJECT_LANGUAGE C CXX)
-set(PROJECT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/demo.h)
-set(PROJECT_DEPS gcc stdc++)
+file(GLOB PROJECT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+set(PROJECT_DEPS)
 
 # Compile setting
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_C_FLAGS_RELEASE "-O3")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++14 -g3")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 # Set default build option

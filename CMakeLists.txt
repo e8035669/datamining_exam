@@ -29,19 +29,20 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 # Dependences paths
 set(DEPS_PATHS
-	${CMAKE_CURRENT_SOURCE_DIR}/deps/deps1
-	${CMAKE_CURRENT_SOURCE_DIR}/deps/deps2
+    #${CMAKE_CURRENT_SOURCE_DIR}/deps/deps1
+    #${CMAKE_CURRENT_SOURCE_DIR}/deps/deps2
 	)
 
 # Library paths
 set(LIB_PATHS
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/
 	)
 
 # Utility paths
 set(UTIL_PATHS
-	${CMAKE_CURRENT_SOURCE_DIR}/util/util1
-	${CMAKE_CURRENT_SOURCE_DIR}/util/util2
+    #${CMAKE_CURRENT_SOURCE_DIR}/util/util1
+    #${CMAKE_CURRENT_SOURCE_DIR}/util/util2
+    ${CMAKE_CURRENT_SOURCE_DIR}/util/find_distance
 	)
 
 if(${BUILD_TEST})
