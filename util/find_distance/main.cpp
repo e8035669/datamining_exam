@@ -1,113 +1,97 @@
-#include <iostream>
-#include <tuple>
-#include <vector>
+#include <cmath>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <stdexcept>
-#include <cmath>
+#include <vector>
+#include "Table.h"
 #include "maths.h"
 
 using namespace std;
 
-struct Database {
-    Database() {}
+struct NumberTable : public Table {
+    NumberTable() {}
 
-    void loadFile(istream&& ifs) {
-        string buf;
-        string buf2;
-        if (std::getline(ifs, buf)) {
-            stringstream ss(buf);
-            while (std::getline(ss, buf2, ',')) {
-                attrName.push_back(buf2);
-            }
-            className = attrName.back();
-            attrName.pop_back();
-        }
-        attrCount = attrName.size();
-
-        cout << "AttrName: ";
-        for (auto& item: attrName) {
-            cout << item << ", ";
-        }
-        cout << endl;
-
-        cout << "ClassName: " << className << endl;
-        while (std::getline(ifs, buf)) {
-            stringstream ss(buf);
-            vector<double> tmpData;
-            for (size_t i = 0; i < attrCount; ++i) {
-                if (getline(ss, buf2, ',')) {
-                    tmpData.push_back(std::stod(buf2));
-                } else {
-                    throw std::runtime_error("Cannot get float number.");
-                }
-            }
-            datas.push_back(tmpData);
-            if (getline(ss, buf2, ',')) {
-                classes.push_back(buf2);
-            }
-        }
-        dataCount = datas.size();
-
-        cout << "datas" << endl;
-        for (size_t i = 0; i < dataCount; ++i) {
-            for (size_t j = 0; j < attrCount; ++j) {
-                cout << datas[i][j] << ", ";
-            }
-            cout << classes[i] << endl;
+    void loadFile(ifstream&& ifs) {
+        Table::loadFile(std::move(ifs), true, true);
+        for (auto& item : this->datas) {
+            vector<double> tmpValue(item.size());
+            std::transform(item.begin(), item.end(), tmpValue.begin(),
+                           [](auto& s) { return std::stod(s); });
+            values.push_back(tmpValue);
         }
     }
 
-    void findEulDis(vector<double>& point, vector<size_t>& order, vector<double>& distance) {
-        if (point.size() != attrCount) throw std::runtime_error("length mismatch");
+    void findEulDis(vector<double>& point, vector<size_t>& order,
+                    vector<double>& distance) {
+        if (point.size() != attrCount)
+            throw std::runtime_error("length mismatch");
         order.resize(dataCount);
         distance.resize(dataCount);
 
         for (size_t i = 0; i < dataCount; ++i) {
             double dis = 0;
             for (size_t j = 0; j < attrCount; ++j) {
-                double err = point[j] - datas[i][j];
+                double err = point[j] - values[i][j];
                 dis += (err * err);
             }
-            dis = pow(dis, 1.0/attrCount);
+            dis = pow(dis, 1.0 / attrCount);
             distance[i] = dis;
         }
         order = sort_indexes(distance);
     }
 
-    size_t attrCount;
-    size_t dataCount;
+    void findCityDis(vector<double>& point, vector<size_t>& order,
+                    vector<double>& distance) {
+        if (point.size() != attrCount)
+            throw std::runtime_error("length mismatch");
+        order.resize(dataCount);
+        distance.resize(dataCount);
 
-    vector<string> attrName;
-    string className;
+        for (size_t i = 0; i < dataCount; ++i) {
+            double dis = 0;
+            for (size_t j = 0; j < attrCount; ++j) {
+                dis += std::fabs(point[j] - values[i][j]);
+            }
+            distance[i] = dis;
+        }
+        order = sort_indexes(distance);
+    }
 
-    vector<vector<double>> datas;
-    vector<string> classes;
+    vector<vector<double>> values;
 };
-
 
 int main(int argc, char** argv) {
     string fileName = argv[1];
+    string method = argv[2];
 
-    Database db;
-    db.loadFile(ifstream(fileName));
+    NumberTable table;
+    table.loadFile(ifstream(fileName));
+    cout << table.showData() << endl;
 
-    vector<double> input(db.attrCount);
-    for (size_t i = 0; i < db.attrCount; ++i) {
-        input[i] = stod(string(argv[i + 2]));
+    vector<double> input(table.attrCount);
+    for (size_t i = 0; i < table.attrCount; ++i) {
+        input[i] = stod(string(argv[i + 3]));
     }
     vector<double> distances;
     vector<size_t> indexes;
 
-    db.findEulDis(input, indexes, distances);
-
-    for (size_t i = 0; i < db.dataCount; ++i) {
-        cout << "Rank " << i << '\t' << "id: " << indexes[i] << '\t' << "Dis: " << distances[indexes[i]] << '\t' << "(";
-        for (size_t j = 0; j < db.attrCount; ++j) {
-            cout << db.datas[indexes[i]][j] << " ";
-        }
-        cout << ")" << '\t' << db.classes[indexes[i]] << endl;
+    if (method == "eul") {
+        table.findEulDis(input, indexes, distances);
+    } else if (method == "city") {
+        table.findCityDis(input, indexes, distances);
+    } else {
+        throw runtime_error("Method must be \"eul\" or \"city\"");
     }
 
-	return 0;
+    for (size_t i = 0; i < table.dataCount; ++i) {
+        cout << "Rank " << i << '\t' << "id: " << indexes[i] << '\t'
+             << "Dis: " << distances[indexes[i]] << '\t' << "(";
+        for (size_t j = 0; j < table.attrCount; ++j) {
+            cout << table.datas[indexes[i]][j] << " ";
+        }
+        cout << ")" << '\t' << table.classes[indexes[i]] << endl;
+    }
+
+    return 0;
 }

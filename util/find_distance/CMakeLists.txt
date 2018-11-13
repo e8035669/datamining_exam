@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 # Set variables
 set(PROJECT_NAME find_distance)
 set(PROJECT_LANGUAGE C CXX)
-set(PROJECT_DEPS)
+set(PROJECT_DEPS misc)
 
 # Compile setting
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")

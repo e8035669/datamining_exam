@@ -68,28 +68,28 @@ std::string Table::showData() {
         ss << "No titles." << endl;
     } else {
         for (size_t i = 0; i < attrName.size(); ++i) {
-            sprintf(buf, "%*s", (int)maxSizes[i], attrName[i].c_str());
+            sprintf(buf, "%*s", (int)maxSizes[i] + 4, attrName[i].c_str());
             ss << string(buf);
         }
     }
 
     if (!className.empty()) {
-        sprintf(buf, "%*s", (int)clsSize, className.c_str());
+        sprintf(buf, "%*s", (int)clsSize + 4, className.c_str());
         ss << string(buf);
     }
     ss << endl;
 
     for (size_t i = 0; i < dataCount; ++i) {
         for (size_t j = 0; j < attrCount; ++j) {
-            sprintf(buf, "%*s", (int)maxSizes[j], datas[i][j].c_str());
+            sprintf(buf, "%*s", (int)maxSizes[j] + 4, datas[i][j].c_str());
             ss << string(buf);
         }
         if (clsSize) {
-            sprintf(buf, "%*s", (int)clsSize, classes[i].c_str());
+            sprintf(buf, "%*s", (int)clsSize + 4, classes[i].c_str());
             ss << string(buf);
         }
         ss << endl;
     }
 
-    return string(buf);
+    return ss.str();
 }

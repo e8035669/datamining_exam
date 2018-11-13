@@ -11,7 +11,7 @@ struct Table {
 
     void loadFile(std::istream&& ifs, bool hasTitle, bool hasClass);
 
-    std::string showData();
+    virtual std::string showData();
 
     size_t attrCount;
     size_t dataCount;
