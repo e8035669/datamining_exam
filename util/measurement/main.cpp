@@ -8,14 +8,14 @@ using namespace std;
 
 void getSumRowCol(vector<vector<double>>& matrix, vector<double>& attrSum,
                   vector<double>& clsSum, double& allSum) {
-    size_t size = matrix.size();
+    // size_t size = matrix.size();
     attrSum.clear();
-    attrSum.resize(size);
+    attrSum.resize(matrix[0].size());
     clsSum.clear();
-    clsSum.resize(size);
+    clsSum.resize(matrix.size());
     allSum = 0;
-    for (size_t i = 0; i < size; i++) {
-        for (size_t j = 0; j < size; j++) {
+    for (size_t i = 0; i < matrix.size(); i++) {
+        for (size_t j = 0; j < matrix[i].size(); j++) {
             attrSum[j] += matrix[i][j];
             clsSum[i] += matrix[i][j];
             allSum += matrix[i][j];
@@ -29,19 +29,22 @@ double calc_entropy(vector<vector<double>>& matrix) {
     double allSum;
     getSumRowCol(matrix, attrSum, clsSum, allSum);
 
-    size_t size = matrix.size();
+    // size_t size = matrix.size();
     double ret = 0;
-    for (size_t i = 0; i < size; i++) {
-        for (size_t j = 0; j < size; j++) {
+    for (size_t i = 0; i < matrix.size(); i++) {
+        for (size_t j = 0; j < matrix[i].size(); j++) {
             if (matrix[i][j] > 0) {
                 double num = (-matrix[i][j] * std::log2(matrix[i][j]));
                 ret += num;
             }
         }
+    }
+    for (size_t i = 0; i < attrSum.size(); i++) {
         if (attrSum[i] > 0) {
             ret += (attrSum[i] * log2(attrSum[i]));
         }
     }
+
     ret /= allSum;
     return ret;
 }
@@ -52,9 +55,9 @@ double calc_Estart(vector<vector<double>>& matrix) {
     double allSum;
     getSumRowCol(matrix, attrSum, clsSum, allSum);
 
-    size_t size = matrix.size();
+    //size_t size = matrix.size();
     double Estart = 0;
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < clsSum.size(); i++) {
         if (clsSum[i] > 0) {
             double p = clsSum[i] / allSum;
             Estart += (-p * log2(p));
@@ -74,11 +77,11 @@ double calc_GiniIndex(vector<vector<double>>& matrix) {
     vector<double> clsSum;
     double allSum;
     getSumRowCol(matrix, attrSum, clsSum, allSum);
-    size_t size = matrix.size();
+    //size_t size = matrix.size();
     double ret = 0;
-    for (size_t col = 0; col < size; col++) {
+    for (size_t col = 0; col < matrix[0].size(); col++) {
         double num = 0;
-        for (size_t row = 0; row < size; row++) {
+        for (size_t row = 0; row < matrix.size(); row++) {
             num += (matrix[row][col] * matrix[row][col]);
         }
         if (attrSum[col] > 0) {
@@ -94,10 +97,10 @@ double calc_Chisquare(vector<vector<double>>& matrix) {
     vector<double> clsSum;
     double allSum;
     getSumRowCol(matrix, attrSum, clsSum, allSum);
-    size_t size = matrix.size();
+    //size_t size = matrix.size();
     double ret = 0;
-    for (size_t i = 0; i < size; i++) {
-        for (size_t j = 0; j < size; j++) {
+    for (size_t i = 0; i < matrix.size(); i++) {
+        for (size_t j = 0; j < matrix[i].size(); j++) {
             double expect = attrSum[j] * clsSum[i] / allSum;
             if (expect > 0) {
                 ret += (matrix[i][j] - expect) * (matrix[i][j] - expect) /
@@ -113,9 +116,9 @@ double calc_Split(vector<vector<double>>& matrix) {
     vector<double> clsSum;
     double allSum;
     getSumRowCol(matrix, attrSum, clsSum, allSum);
-    size_t size = matrix.size();
+    //size_t size = matrix.size();
     double ret = 0;
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < attrSum.size(); i++) {
         if (attrSum[i] > 0) {
             double num = attrSum[i] / allSum;
             ret += (-num * log2(num));
@@ -141,11 +144,12 @@ int main(int argc, char** argv) {
         input.push_back(tmpInput);
         if (tmpInput.size() != input[0].size())
             throw runtime_error("Length mismatch.");
-        if (tmpInput.size() == input.size()) {
-            cout << "Matrix Complete." << endl;
-            break;
-        }
+        //if (tmpInput.size() == input.size()) {
+        //    cout << "Matrix Complete." << endl;
+        //    break;
+        //}
     }
+    cout << "Matrix Complete." << endl;
 
     cout << "Entropy:   " << calc_entropy(input) << " Small better" << endl;
     cout << "IG:        " << calc_IG(input) << " Big better" << endl;
