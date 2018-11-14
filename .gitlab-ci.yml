@@ -39,11 +39,11 @@ build:
     expire_in: 1 day
 
 # Test task
-test:
-  stage: test
+#test:
+#  stage: test
 
   # Run test
-  script:
-    - ./build/install/bin/test_demo
+  #  script:
+  #  - ./build/install/bin/test_demo
 
 # vim: set tabstop=2 shiftwidth=2 expandtab :
