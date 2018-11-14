@@ -43,6 +43,7 @@ set(UTIL_PATHS
     #${CMAKE_CURRENT_SOURCE_DIR}/util/util1
     #${CMAKE_CURRENT_SOURCE_DIR}/util/util2
     ${CMAKE_CURRENT_SOURCE_DIR}/util/find_distance
+    ${CMAKE_CURRENT_SOURCE_DIR}/util/prob_table
 	)
 
 if(${BUILD_TEST})
