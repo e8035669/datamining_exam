@@ -55,7 +55,7 @@ double calc_Estart(vector<vector<double>>& matrix) {
     double allSum;
     getSumRowCol(matrix, attrSum, clsSum, allSum);
 
-    //size_t size = matrix.size();
+    // size_t size = matrix.size();
     double Estart = 0;
     for (size_t i = 0; i < clsSum.size(); i++) {
         if (clsSum[i] > 0) {
@@ -77,7 +77,7 @@ double calc_GiniIndex(vector<vector<double>>& matrix) {
     vector<double> clsSum;
     double allSum;
     getSumRowCol(matrix, attrSum, clsSum, allSum);
-    //size_t size = matrix.size();
+    // size_t size = matrix.size();
     double ret = 0;
     for (size_t col = 0; col < matrix[0].size(); col++) {
         double num = 0;
@@ -97,15 +97,13 @@ double calc_Chisquare(vector<vector<double>>& matrix) {
     vector<double> clsSum;
     double allSum;
     getSumRowCol(matrix, attrSum, clsSum, allSum);
-    //size_t size = matrix.size();
+    // size_t size = matrix.size();
     double ret = 0;
     for (size_t i = 0; i < matrix.size(); i++) {
         for (size_t j = 0; j < matrix[i].size(); j++) {
             double expect = attrSum[j] * clsSum[i] / allSum;
-            if (expect > 0) {
-                ret += (matrix[i][j] - expect) * (matrix[i][j] - expect) /
-                       (expect);
-            }
+            ret += (matrix[i][j] - expect) * (matrix[i][j] - expect) /
+                   max(expect, 0.5);
         }
     }
     return ret;
@@ -116,7 +114,7 @@ double calc_Split(vector<vector<double>>& matrix) {
     vector<double> clsSum;
     double allSum;
     getSumRowCol(matrix, attrSum, clsSum, allSum);
-    //size_t size = matrix.size();
+    // size_t size = matrix.size();
     double ret = 0;
     for (size_t i = 0; i < attrSum.size(); i++) {
         if (attrSum[i] > 0) {
@@ -144,7 +142,7 @@ int main(int argc, char** argv) {
         input.push_back(tmpInput);
         if (tmpInput.size() != input[0].size())
             throw runtime_error("Length mismatch.");
-        //if (tmpInput.size() == input.size()) {
+        // if (tmpInput.size() == input.size()) {
         //    cout << "Matrix Complete." << endl;
         //    break;
         //}
@@ -156,6 +154,8 @@ int main(int argc, char** argv) {
     cout << "Gini:      " << calc_GiniIndex(input) << " Small better" << endl;
     cout << "ChiSquare: " << calc_Chisquare(input) << " Big better" << endl;
     cout << "GainRatio: " << calc_GainRatio(input) << " Big better" << endl;
+    cout << "Estart:    " << calc_Estart(input) << " ???" << endl;
+    cout << "Split:     " << calc_Split(input) << " ???" << endl;
 
     return 0;
 }
